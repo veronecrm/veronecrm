@@ -1,0 +1,47 @@
+/**
+ * Verone CRM | http://www.veronecrm.com
+ *
+ * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @license    GNU General Public License version 3; see license.txt
+ */
+
+body {background-color:#2B303B;font-size:12px;font-family:'Open Sans', Tahoma, Verdana, Arial;}
+
+.slick-panel {top:100px;left:50%;margin-left:-180px;z-index:10;position:fixed;width:360px;color:#fff;}
+.slick-panel h3 {font-size:15px;font-weight:300;margin-bottom:15px;text-shadow:0 0 3px #000;}
+.slick-panel label {color:#fff;}
+.slick-panel select {color:#333;}
+.slick-panel .form-control-feedback {color:#666;}
+
+.login-panel .form-group {margin-top:-1px;}
+.login-panel .form-group.first-group {margin-bottom:0;}
+.login-panel .form-group.first-group .form-control {margin-bottom:0;}
+.login-panel .form-group .form-control:focus {position:relative;z-index:1;border:1px solid #ddd;}
+.login-panel .lang-select {text-align:right;margin-top:30px;display:block;text-shadow:0 0 3px #000;}
+.login-panel .heading-icon {color:#fff;font-size:80px;text-align:center;}
+.login-panel h3 {text-align:center;font-size:20px;margin-bottom:30px;}
+.unlock-panel .btn,
+.unlock-panel .form-control {height:30px;}
+.unlock-panel a {display:block;font-size:12px;text-shadow:0 0 3px #000;color:#fff;opacity:.3;margin:8px 0 0 0;}
+.unlock-panel a:hover {opacity:1;}
+.background-images {left:0;top:0;right:0;bottom:0;position:fixed;z-index:1;}
+.background-images div {left:0;top:0;right:0;bottom:0;position:absolute;z-index:1;background-size:cover;background-repeat:no-repeat;background-position:center center}
+.unslpash-credits {display:none;opacity:0;padding:10px;bottom:5px;right:5px;position:fixed;z-index:3;color:#fff;font-size:13px;color:#fff;text-shadow:0 0 3px #000;}
+.unslpash-credits:hover {color:#fff;}
+
+.form-control {font-size:12px;height:30px;border:1px solid rgba(0,0,0,0.07);padding:3px 6px 5px;margin-bottom:14px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;-moz-transition:all 0.15s ease;-webkit-transition:all 0.15s ease;transition:all 0.15s ease;}
+.form-control:hover {border:1px solid rgba(0,0,0,0.1);}
+.form-control:focus {box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;background-color:#FAFAFA;}
+
+.form-control-feedback {width:30px;height:30px;}
+.form-control-feedback.fa {line-height:30px;font-size:15px;}
+
+.btn {font-size:12px;padding:5px 10px;color:#5E5E5E;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;-moz-transition:all 0.15s ease;-webkit-transition:all 0.15s ease;transition:all 0.15s ease;}
+.btn-default {background-color:#fff;border:1px solid #F0F0F0;}
+.btn:hover {background-color:#F0F0F0;border:1px solid #E6E6E6;color:#2C2C2C;}
+.btn-primary {color:#fff;}
+.btn-primary:hover {background-color:#2F6998;border:1px solid #0088CC;color:#fff;}
+
+@media only screen and (max-width:767px) {
+    .slick-panel {position:relative;top:auto;left:auto;max-width:100%;margin:40px auto 0 auto;padding:0 20px;}
+}

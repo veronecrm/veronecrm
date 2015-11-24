@@ -1,0 +1,19 @@
+{
+    "name": "veronecrm/veronecrm",
+    "type": "project",
+    "description": "Verone CRM",
+    "keywords": ["verone", "crm", "system"],
+    "homepage": "http://www.veronecrm.com",
+    "license": "MIT",
+    "require": {
+        "dompdf/dompdf": "^0.6.1",
+        "mgargano/simplehtmldom": "1.5",
+        "swiftmailer/swiftmailer": "5.4.*",
+        "atline/atline": "0.2.*",
+        "assetter/assetter": "0.1.*",
+        "eehandler/eehandler": "dev-master",
+        "symfony/class-loader": "2.7.*",
+        "symfony/filesystem": "2.7.*",
+        "phpoffice/phpexcel": "1.8.*"
+    }
+}

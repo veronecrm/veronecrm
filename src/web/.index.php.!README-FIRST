@@ -1,0 +1,11 @@
+# Readme - index.php file
+File index.php is a main file where Request starts. You can define environment or application flow (if you want diffrent than normal behavior). You can modify this file to change apllication flow - to do that, you can replace it's content to one of followed files (placed in the same directory):
+
+1. **.index.php.dev** - Contains code for Developers environment.
+2. **.index.php.prod** - Contains code for Production environment.
+3. **.index.php.install** - Contains installation flow code.
+4. **.index.php.installed** - Contains default code flow, when application is installed.
+
+In example - when you installs CRM, **index.php** contains content from **.index.php.install** file, and after installation, this content is replaced by content from **.index.php.installed** file, that contains default production environment code.
+
+Remember to not modify files that name starts with dot (listed up), these files aren't visible from browser, and are used by application (i.e. in App installation process) - you can copy content from these files and place content in main index.php file to change application flow.

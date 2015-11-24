@@ -1,0 +1,15 @@
+Options -Indexes
+
+<IfModule mod_headers.c>
+    <FilesMatch ".(ico|jpg|jpeg|png|gif|js|css|swf)$">
+        <IfModule mod_expires.c>
+            ExpiresActive on
+            ExpiresDefault A604800
+            Header set Cache-Control "max-age=604800, public"
+        </IfModule>
+
+        Header unset ETag
+        FileETag None
+
+    </FilesMatch>
+</IfModule>

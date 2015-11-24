@@ -1,0 +1,14 @@
+/**
+ * Verone CRM | http://www.veronecrm.com
+ *
+ * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @license    GNU General Public License version 3; see license.txt
+ */
+
+base      - 0088CC
+primary   - 2F6998
+success   - 29B12B
+warning   - F0AD4E
+danger    - D9534F
+secondary - 2B303B
+info      - 5BC0DE

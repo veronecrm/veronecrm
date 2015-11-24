@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package type="core">
+
+    <!-- UID of package. -->
+    <uid>core.crm</uid>
+    <!-- Package name. -->
+    <name>core</name>
+    <!-- Package version. -->
+    <version>0.1.0</version>
+    <!-- Package release date. -->
+    <relase-date>2015.11.10</relase-date>
+    <!-- Package license. -->
+    <license>GPLv3</license>
+    <!-- Author details. -->
+    <author>
+        <name>Adam Banaszkiewicz</name>
+        <url>http://www.veronecrm.com</url>
+    </author>
+
+    <!-- Settings list. -->
+    <setting type="0" name="id"></setting>
+    <setting type="0" name="language">pl</setting>
+    <setting type="0" name="timezone">41</setting>
+    <setting type="0" name="currency">1</setting>
+    <setting type="0" name="company.fullname"></setting>
+    <setting type="0" name="company.name"></setting>
+    <setting type="0" name="company.address"></setting>
+    <setting type="0" name="update.api.server">http://api.update.veronecrm.com/</setting>
+    <setting type="2" name="layout.menu.behavior">1</setting>
+
+</package>
