@@ -2,7 +2,7 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
@@ -176,6 +176,51 @@ class UserProvider extends Provider
                         ( `key`, `value`, `param` )
                     VALUES
                         ( '{$key[0]['id']}', '{$default}', {$user['id']} )");
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unregisterKey($name)
+    {
+        $key = $this->db->query("SELECT id
+            FROM #__setting_key
+            WHERE (
+                    `key` = '{$name}'
+                AND `type` = '{$this->type}'
+            )
+            LIMIT 1
+            ");
+
+        if(! isset($key[0]['id']))
+        {
+            return false;
+        }
+
+        $this->db->exec("DELETE FROM #__setting_key
+            WHERE
+                    `key` = '{$name}'
+                AND `type` = '{$this->type}'
+            ");
+
+        $users = $this->db->query("SELECT id FROM #__user");
+
+        if(is_array($users))
+        {
+            /**
+             * Remove value for every user in DB.
+             */
+            foreach($users as $user)
+            {
+                $this->db->exec("DELETE FROM #__setting_value
+                    WHERE
+                            `key` = '{$key[0]['id']}'
+                        AND `param` = '{$user['id']}'
+                    ");
             }
         }
 

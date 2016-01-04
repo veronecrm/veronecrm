@@ -2,11 +2,11 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
-include_once '../vendor/autoload.php';
+include_once BASEPATH.'/vendor/autoload.php';
 
 use Symfony\Component\ClassLoader\ClassLoader;
 

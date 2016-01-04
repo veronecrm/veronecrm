@@ -21,7 +21,7 @@ $(function() {
         }
     });
 
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip({container:'body'});
     $('.navbar-toggle-large').click(function() {
         $('.sidebar').toggleClass('sidebar-opened').toggleClass('sidebar-closed');
     });
@@ -143,19 +143,26 @@ $(function() {
         });
     }
 
-    /**
-     * Textareas autogrow.
-     * @todo Rewrite to Vanilla JS.
-     */
-    function autoHeightResize(element) {
-        $(element).css({'height':'auto','overflow-y':'hidden'}).height(element.scrollHeight);
-    }
-    $('textarea.auto-grow')
-        .each(function() {autoHeightResize(this);})
-        .on('input', function() {autoHeightResize(this);});
+    applyTextareaAutoGrow('textarea.auto-grow');
 
     APP.domIsReady();
 });
+
+/**
+ * Textareas autogrow.
+ * @todo Rewrite to Vanilla JS.
+ */
+function autoHeightResize(element) {
+    $(element).css({'height':'auto','overflow-y':'hidden'}).height(element.scrollHeight);
+}
+function applyTextareaAutoGrow(selector) {
+    $(selector)
+        .trigger('autogrow.update')
+        .not('.auto-grow-binded')
+        .addClass('.auto-grow-binded')
+        .each(function() {autoHeightResize(this)})
+        .on('input autogrow.update', function() {autoHeightResize(this)});
+}
 
 /**
  * For RADIOs.

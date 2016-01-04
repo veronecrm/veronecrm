@@ -2,7 +2,7 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
@@ -125,4 +125,12 @@ abstract class Provider
      * @return boolean
      */
     abstract public function registerKey($name, $default);
+
+    /**
+     * Removes key.
+     * 
+     * @param  string $name Key name.
+     * @return boolean
+     */
+    abstract public function unregisterKey($name);
 }

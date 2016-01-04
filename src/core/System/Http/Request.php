@@ -2,7 +2,7 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
@@ -187,7 +187,12 @@ class Request
      */
     public function setLocale($locale)
     {
-        $this->session->set('locale', $this->locale = $locale);
+        $this->locale = $locale;
+
+        if($this->hasSession())
+        {
+            $this->session->set('locale', $this->locale);
+        }
 
         return $this;
     }
@@ -270,7 +275,7 @@ class Request
      */
     public function getFullUrl()
     {
-        return 'http'.(isset($_SERVER['HTTPS']) ? 's' : '')."://{$this->server->get('SERVER_NAME')}{$this->server->get('REQUEST_URI', '/')}";
+        return 'http'.(isset($_SERVER['HTTPS']) ? 's' : '')."://{$this->server->get('SERVER_NAME')}".rtrim($this->getBasePath(), '/').$this->server->get('REQUEST_URI', '/');
     }
 
     /**

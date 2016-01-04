@@ -5,6 +5,14 @@
  * @license    GNU General Public License version 3; see license.txt
  */
 
+/**
+ * Custom events creation:
+ * Prototype: app.plugin-name:event-name
+ * Examples:
+ *     - app.main:init
+ *     - app.ve-panel:close
+ *     - app.fluid-notification:toggle
+ */
 var APP = {
     _isDomReady: false,
     isDomReady: function() {
@@ -557,8 +565,8 @@ APP.plugin.register(APP_History);
 var APP_FluidNotification = new APP.factory.plugin('FluidNotification');
 // Main function
 APP_FluidNotification.domReady = function() {
-    APP.Asset.js('/assets/jgrowl/jquery.jgrowl.min.js');
-    APP.Asset.css('/assets/jgrowl/jquery.jgrowl.min.css');
+    APP.Asset.js(APP.filePath('/assets/jgrowl/jquery.jgrowl.min.js'));
+    APP.Asset.css(APP.filePath('/assets/jgrowl/jquery.jgrowl.min.css'));
 };
 APP_FluidNotification.loaded = false;
 APP_FluidNotification.loadInterval = null;
@@ -1138,6 +1146,7 @@ APP_RecordHistoryLog.create = function(options) {
             }
 
             this.createPagination();
+            this.target.append('<p class="text-center"><a href="' + APP.createUrl('HistoryLog', 'History', 'index', { 'module': this.options.module, 'entityName': this.options.module, 'entityId': this.options.id }) + '" class="btn btn-xs btn-default">' + APP.t('showFullChanges') + '</a></p>');
         };
 
         this.createPagination = function() {
@@ -1262,10 +1271,10 @@ APP_VEPanel.open = function(selector, allowCloseByUser) {
 
     return panel;
 };
-APP_VEPanel.close = function() {
+APP_VEPanel.close = function(argument) {
     if(APP_VEPanel.opened)
     {
-        $(APP_VEPanel.opened).addClass('hidden').trigger('app.ve-panel:close');
+        $(APP_VEPanel.opened).addClass('hidden').trigger('app.ve-panel:close', [ argument ]);
         $('#wrapper').removeClass('blurred');
         APP_VEPanel.opened = false;
         return true;
@@ -1283,6 +1292,7 @@ APP.plugin.register(APP_VEPanel);
  * Creates Comments panel, managed in AJAX.
  */
 var APP_Comments = new APP.factory.plugin('Comments');
+APP_Comments.instances = 0;
 // Main function
 APP_Comments.domReady = function() { };
 APP_Comments.create = function(options) {
@@ -1503,3 +1513,265 @@ APP_ConfirmationPanel.reset = function() {
 
 // Registering plugin
 APP.plugin.register(APP_ConfirmationPanel);
+
+
+
+
+/**
+ * Allow bind events for File Input, and manage selected files.
+ */
+var APP_FileInput = new APP.factory.plugin('FileInput');
+// Main function
+APP_FileInput.domReady = function() { };
+APP_FileInput.create = function(options) {
+    /**
+     * Extending user given options.
+     */
+    var userOptions = $.extend({
+        inputTarget  : 'input[type=file]',
+        statusTarget : '.input-file-status',
+        statusShowMaxNames: 3,
+        onChange     : function(files) {}
+    }, options);
+
+    var FileInputMain = function(options) {
+        this.options = options;
+        this.target  = null;
+        this.status  = null;
+
+        this.init = function() {
+            var self = this;
+
+            self.target = $(self.options.inputTarget);
+            self.status = $(self.options.statusTarget);
+
+            self.target.get(0).addEventListener('change', function(e) {
+                self.updateStatus(e.target.files);
+                self.options.onChange(e.target.files);
+            }, false);
+        };
+
+        this.updateStatus = function(files) {
+            if(files.length <= this.options.statusShowMaxNames)
+            {
+                var names = [];
+
+                for(var i = 0; i < files.length; i++)
+                {
+                    names.push(files[i].name);
+                }
+
+                this.status.val(names.join(', '));
+            }
+            else if(files.length > this.options.statusShowMaxNames)
+            {
+                this.status.val(APP.t('selectedFilesCount') + files.length);
+            }
+            else
+            {
+                this.status.val('');
+            }
+        };
+
+        this.open = function() {
+            this.target.trigger('focus').trigger('click');
+
+            return this;
+        };
+    };
+
+    APP_FileInput.instances++;
+
+    var o = new FileInputMain(userOptions);
+    o.init();
+    return o;
+};
+
+// Registering plugin
+APP.plugin.register(APP_FileInput);
+
+
+
+
+
+/**
+ * Allow bind events for File Input, and manage selected files.
+ */
+var APP_PageTitle = new APP.factory.plugin('PageTitle');
+/**
+ * Stpre original page title.
+ * @type string
+ */
+APP_PageTitle.original = '';
+/**
+ * Store all title intervals, created by modules.
+ * @type array
+ */
+APP_PageTitle.intervals = [];
+/**
+ * ID of next title interval.
+ * @type integer
+ */
+APP_PageTitle.intervalsNextId = 1;
+/**
+ * Page title interval identificator.
+ * @type mixed
+ */
+APP_PageTitle.interval = null;
+
+
+// Main function
+APP_PageTitle.domReady = function() {
+    APP_PageTitle.original = $('head title').text();
+    APP_PageTitle.setInterval(APP_PageTitle.original);
+};
+APP_PageTitle.set = function(title) {
+    $('head title').text(title);
+};
+APP_PageTitle.restoreOriginal = function() {
+    $('head title').text(APP_PageTitle.original);
+};
+APP_PageTitle.setInterval = function(title) {
+    var titleData = {
+        id      : APP_PageTitle.intervalsNextId++,
+        title   : title,
+        current : false
+    };
+
+    APP_PageTitle.intervals.push(titleData);
+
+    APP_PageTitle.updateTitleInterval();
+
+    return titleData.id;
+};
+APP_PageTitle.updateInterval = function(id, title) {
+    for(var i in APP_PageTitle.intervals)
+    {
+        if(APP_PageTitle.intervals[i].id == id)
+        {
+            APP_PageTitle.intervals[i].title = title;
+        }
+    }
+
+    APP_PageTitle.updateTitleInterval();
+};
+APP_PageTitle.clearInterval = function(id) {
+    for(var i in APP_PageTitle.intervals)
+    {
+        if(APP_PageTitle.intervals[i].id == id)
+        {
+            APP_PageTitle.intervals[i] = {};
+            delete APP_PageTitle.intervals[i];
+        }
+    }
+
+    APP_PageTitle.updateTitleInterval();
+};
+APP_PageTitle.updateTitleInterval = function() {
+    APP_PageTitle.intervals = APP_PageTitle.intervals.filter(function(item) { return item != undefined });
+
+    if(APP_PageTitle.intervals.length <= 1)
+    {
+        clearInterval(APP_PageTitle.interval);
+        APP_PageTitle.interval = null;
+        APP_PageTitle.restoreOriginal();
+    }
+    else if(APP_PageTitle.interval == null)
+    {
+        APP_PageTitle.interval = setInterval(APP_PageTitle.showNextTitleInterval, 1000);
+    }
+};
+APP_PageTitle.showNextTitleInterval = function() {
+    var nextTitle = null;
+
+    for(var i in APP_PageTitle.intervals)
+    {
+        i = parseInt(i);
+
+        if(APP_PageTitle.intervals[i].current)
+        {
+            APP_PageTitle.intervals[i].current = false;
+
+            if(APP_PageTitle.intervals[i + 1])
+            {
+                APP_PageTitle.intervals[i + 1].current = true;
+                nextTitle = APP_PageTitle.intervals[i + 1].title;
+                break;
+            }
+        }
+    }
+
+    if(nextTitle == null)
+    {
+        APP_PageTitle.intervals[0].current = true;
+        nextTitle = APP_PageTitle.intervals[0].title;
+    }
+
+    APP_PageTitle.set(nextTitle);
+};
+
+// Registering plugin
+APP.plugin.register(APP_PageTitle);
+
+
+
+
+
+
+/**
+ * Browser Notifications Plugin manager.
+ */
+var APP_BrowserNotification = new APP.factory.plugin('BrowserNotification');
+/**
+ * Tell plugin, that Browser Notifications can be showed.
+ * @type boolean
+ */
+APP_BrowserNotification.canNotify = false;
+/**
+ * Store current Notification object,
+ * @type boolean
+ */
+APP_BrowserNotification.notification = null;
+
+
+// Main function
+APP_BrowserNotification.domReady = function() {
+    if("Notification" in window)
+    {
+        if(Notification.permission == 'granted')
+        {
+            APP_BrowserNotification.canNotify = true;
+        }
+        else if(Notification.permission != 'denied')
+        {
+            if(confirm('Za chwilę zostaniesz poproszony o zezwolenie na wyświetlanie powiadomień z tej strony. Zaakceptuj je, by móc dostawać powiadomienia z aplikacji Verone CRM.'))
+            {
+                Notification.requestPermission(function(permission) {
+                    if(permission === 'granted')
+                    {
+                        APP_BrowserNotification.canNotify = true;
+                    }
+                    else
+                    {
+                        APP_BrowserNotification.canNotify = false;
+                        APP.FluidNotification.open('Nie zezwolono na pokazywanie powiadomień.', {theme: 'error'});
+                    }
+                });
+            }
+        }
+    }
+};
+APP_BrowserNotification.show = function(options) {
+    if(APP_BrowserNotification.canNotify && APP_BrowserNotification.notification == null)
+    {
+
+        APP_BrowserNotification.notification = new Notification(options.title ? options.title : 'Notification', options);
+
+        APP_BrowserNotification.notification.onclose = function() {
+            APP_BrowserNotification.notification = null;
+        };
+    }
+};
+
+// Registering plugin
+APP.plugin.register(APP_BrowserNotification);

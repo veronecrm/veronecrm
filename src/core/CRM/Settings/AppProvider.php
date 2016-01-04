@@ -2,7 +2,7 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
@@ -142,7 +142,7 @@ class AppProvider extends Provider
         $this->db->exec("INSERT INTO #__setting_key
                 ( `key`, `default`, `type` )
             VALUES
-                ( '{$name}', '{$default}', {$this->type} )");
+                ( '{$name}', '{$default}', '{$this->type}' )");
 
         $key = $this->db->query("SELECT id
             FROM #__setting_key
@@ -161,7 +161,39 @@ class AppProvider extends Provider
         $this->db->exec("INSERT INTO #__setting_value
                 ( `key`, `value`, `param` )
             VALUES
-                ( '{$key[0]['id']}', '{$default}', {$this->param} )");
+                ( '{$key[0]['id']}', '{$default}', '{$this->param}' )");
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unregisterKey($name)
+    {
+        $key = $this->db->query("SELECT id
+            FROM #__setting_key
+            WHERE (
+                    `key` = '{$name}'
+                AND `type` = '{$this->type}'
+            )
+            LIMIT 1
+            ");
+
+        if(! isset($key[0]['id']))
+        {
+            return false;
+        }
+
+        $this->db->exec("DELETE FROM #__setting_key
+            WHERE
+                    `key` = '{$name}'
+                AND `type` = '{$this->type}'
+            ");
+
+        $this->db->exec("DELETE FROM #__setting_value
+            WHERE `key` = '{$key[0]['id']}'
+            ");
 
         return true;
     }

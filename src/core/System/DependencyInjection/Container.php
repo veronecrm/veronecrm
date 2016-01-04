@@ -2,7 +2,7 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
@@ -26,14 +26,14 @@ class Container
         return $this->services;
     }
 
-    public function register($id, $className, array $arguments = [], array $listen = [], $useFactory = false)
+    public function register($id, $className, array $arguments = [], array $listen = [], $useFactory = false, $alwaysNew = false)
     {
         $this->services[$id] = [
             'class'       => $className,
             'arguments'   => $arguments,
             'listen'      => $listen,
             'use-factory' => $useFactory,
-            'always-new'  => false
+            'always-new'  => $alwaysNew
         ];
 
         foreach($listen as $name)

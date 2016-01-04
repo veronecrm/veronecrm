@@ -2,7 +2,7 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
@@ -122,11 +122,6 @@ class Base
         return $this->container->get('package.plugin.manager')->callPlugins($category, $action, $params);
     }
 
-    public function createUrl(/* poly... */)
-    {
-        return 'http://'.$this->request()->server->get('HTTP_HOST', 'localhost').$this->container->get('request')->getBasePath().'index.php?'.call_user_func_array([ $this, 'createQueryString' ], func_get_args());
-    }
-
     public function openUserHistory($entity, $module = null)
     {
         if($module === null)
@@ -144,6 +139,11 @@ class Base
         return $logger;
     }
 
+    public function log($log, $status, $module)
+    {
+        return $this->container->get('history.user.log')->log($log, $status, $module);
+    }
+
     public function assetter()
     {
         return $this->container->get('assetter');
@@ -152,6 +152,11 @@ class Base
     public function acl($section, $entity, $group = null)
     {
         return $this->container->get('permission.acl')->open($section, $entity, $group);
+    }
+
+    public function createUrl(/* poly... */)
+    {
+        return 'http://'.$this->request()->server->get('HTTP_HOST', 'localhost').$this->container->get('request')->getBasePath().'index.php?'.call_user_func_array([ $this, 'createQueryString' ], func_get_args());
     }
 
     public function createQueryString(/* poly... */)

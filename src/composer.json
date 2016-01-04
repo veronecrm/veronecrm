@@ -4,8 +4,9 @@
     "description": "Verone CRM",
     "keywords": ["verone", "crm", "system"],
     "homepage": "http://www.veronecrm.com",
-    "license": "MIT",
+    "license": "GPL",
     "require": {
+        "php": ">=5.5",
         "dompdf/dompdf": "^0.6.1",
         "mgargano/simplehtmldom": "1.5",
         "swiftmailer/swiftmailer": "5.4.*",
@@ -14,6 +15,8 @@
         "eehandler/eehandler": "dev-master",
         "symfony/class-loader": "2.7.*",
         "symfony/filesystem": "2.7.*",
-        "phpoffice/phpexcel": "1.8.*"
+        "phpoffice/phpexcel": "1.8.*",
+        "zendframework/zend-crypt": "2.5.*",
+        "yzalis/identicon": "*"
     }
 }

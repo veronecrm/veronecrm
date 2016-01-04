@@ -22,3 +22,5 @@ APP.Locale.translations.APPConfirmationPanelConfirmationRequiredDescription = 'D
 APP.Locale.translations.typePassword = 'Podaj hasło';
 APP.Locale.translations.givenPasswordIsInvalid = 'Podane hasło jest nieprawidłowe.';
 APP.Locale.translations.APPConfirmationPanelApply = 'Zatwierdź';
+APP.Locale.translations.showFullChanges = 'Zobacz pełne zmiany';
+APP.Locale.translations.selectedFilesCount = 'Wybranych plików: ';

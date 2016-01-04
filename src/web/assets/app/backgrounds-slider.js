@@ -5,7 +5,7 @@
  * @license    GNU General Public License version 3; see license.txt
  */
 
-function createBackgroundSlider(path) {
+function createBackgroundSlider() {
     var sizes = [ [1000, 0, 1000], [1280, 1001, 1280], [1680, 1281, 1680], [1920, 1681, 5000] ];
     var imagesCount = 5;
     var width = $('body').width();

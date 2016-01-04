@@ -2,7 +2,7 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
@@ -20,6 +20,26 @@ class Log
     protected $module;
     protected $entityName;
     protected $entityId;
+    protected $log = null;
+    protected $type = 1;
+
+    /**
+     * Store ID of row in DB, that contains
+     * pre and post values. Can be used for
+     * creating relations of many changes.
+     * @var integer
+     */
+    protected $changeId;
+
+    /**
+     * Store ID of other change, that is related with this one.
+     * This allow us create relational changes. We change A entity,
+     * and also B and C entity, so we can create relation, to save
+     * this change with other one. Given only for changes, that
+     * was created by other changes - not for main changes.
+     * @var integer
+     */
+    protected $relatedWith;
 
     /**
      * Stores values before changing by user
@@ -45,6 +65,28 @@ class Log
         $this->db   = $db;
         $this->orm  = $orm;
         $this->user = $user;
+    }
+
+    /**
+     * Return Change ID, that give us ability to create
+     * relation of multiple changes.
+     * @return integer
+     */
+    public function getChangeId()
+    {
+        return $this->changeId;
+    }
+
+    /**
+     * Set ID of ohte change (row in DB), that this change should be related.
+     * @param  integer $relatedWith ID of other change/
+     * @return selg
+     */
+    public function relatedWith($relatedWith)
+    {
+        $this->relatedWith = $relatedWith;
+
+        return $this;
     }
 
     /**
@@ -79,6 +121,27 @@ class Log
     public function setModule($module)
     {
         $this->module = $module;
+
+        return $this;
+    }
+
+    /**
+     * Save log as standard text.
+     * @param  string $log              Log's text to save.
+     * @param  string|integer $status   Log status.
+     * @param  string $module           Module name.
+     * @return self
+     */
+    public function log($log, $status, $module)
+    {
+        $this->log    = $log;
+        $this->type   = 2;
+        $this->setModule($module);
+
+        $this->flushOnly($status, null);
+
+        $this->log    = null;
+        $this->type   = 1;
 
         return $this;
     }
@@ -135,20 +198,23 @@ class Log
         $this->db->builder()->insert('#__history_log', [
             'authorId'   => $this->user->getId(),
             'authorName' => $this->user->getName(),
-            'entityId'=> $this->entityId,
-            'date'    => time(),
-            'object'  => $object,
-            'status'  => $status,
-            'module'  => $this->module,
-            'entityName' => $this->entityName
+            'entityId'   => $this->entityId,
+            'date'       => time(),
+            'object'     => $object,
+            'status'     => $status,
+            'module'     => $this->module,
+            'entityName' => $this->entityName,
+            'relatedWith'=> $this->relatedWith,
+            'type'       => $this->type,
+            'log'        => $this->log
         ]);
 
-        $rowId = $this->db->getLastInsertedId();
+        $this->changeId = $this->db->getLastInsertedId();
 
         if($status == 1)
-            $this->savePreData($rowId);
+            $this->savePreData($this->changeId);
         else
-            $this->saveChanges($rowId);
+            $this->saveChanges($this->changeId);
 
         return $this;
     }
@@ -244,6 +310,7 @@ class Log
             ->where('module', $this->module)
             ->where('entityName', $this->entityName)
             ->where('entityId', $this->entity->getId())
+            ->where('relatedWith', 0)
             ->orderBy('date', 'desc');
 
         if($start !== null && $limit !== null)

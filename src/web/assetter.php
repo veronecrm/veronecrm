@@ -2,7 +2,7 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
@@ -155,5 +155,12 @@ return [
         'group' => 'body',
         'files' => [ 'js' => [ '{ASSETS}/mcustomscrollbar/jquery.mCustomScrollbar.min.js' ], 'css' => [ '{ASSETS}/mcustomscrollbar/jquery.mCustomScrollbar.min.css' ] ],
         'require' => [ 'jquery-mousewheel' ]
+    ],
+    [
+        'name'  => 'flot',
+        'order' => -50,
+        'group' => 'body',
+        'files' => [ 'js' => [ '{ASSETS}/flot/jquery.flot.min.js' ] ],
+        'require' => [ 'jquery' ]
     ],
 ];

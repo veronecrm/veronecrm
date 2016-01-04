@@ -2,7 +2,7 @@
 /**
  * Verone CRM | http://www.veronecrm.com
  *
- * @copyright  Copyright (C) 2015 Adam Banaszkiewicz
+ * @copyright  Copyright (C) 2015 - 2016 Adam Banaszkiewicz
  * @license    GNU General Public License version 3; see license.txt
  */
 
@@ -83,6 +83,31 @@ class Module extends UninstallatorAbstract
             ->delete('#__package');
 
         $this->log('info', 'Module removed from Database "modules" table.');
+
+        /**
+         * Install settings.
+         */
+        if($this->manifest->has('setting'))
+        {
+            $settingsApp  = $this->settings->open('app');
+            $settingsUser = $this->settings->open('user');
+
+            foreach($this->manifest->getSettings() as $setting)
+            {
+                if($setting['type'] == 0)
+                {
+                    $this->log('info', 'Unregistration of App setting key: '.$setting['name']);
+
+                    $settingsApp->unregisterKey($setting['name']);
+                }
+                elseif($setting['type'] == 2)
+                {
+                    $this->log('info', 'Unregistration of User setting key: '.$setting['name']);
+
+                    $settingsUser->unregisterKey($setting['name']);
+                }
+            }
+        }
 
         /**
          * Execute SQL Queries.
